@@ -113,7 +113,7 @@ RUN set -x && \
     rm -rf /src/* /tmp/* /var/lib/apt/lists/* && \
     # document versions
     grep -v tar1090-db /VERSIONS | grep tar1090 | cut -d " " -f 2 > /CONTAINER_VERSION && \
-    cat /VERSIONS
+    cat /CONTAINER_VERSION
 
 EXPOSE 80/tcp
 
