@@ -75,6 +75,37 @@ RUN set -x && \
     # aircraft-db
     mkdir -p "$GITPATH_TAR1090_AC_DB" && \
     curl "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" > "$GITPATH_TAR1090_AC_DB/aircraft.csv.gz" && \
+    # Deploy graphs1090
+    git clone \
+        -b master \
+        --depth 1 \
+        https://github.com/wiedehopf/graphs1090.git \
+        /usr/share/graphs1090/git \
+        && \
+    pushd /usr/share/graphs1090/git && \
+    git log | head -1 | tr -s " " "_" | tee /VERSION && \
+    git log | head -1 | tr -s " " "_" | cut -c1-14 > /CONTAINER_VERSION && \
+    cp -v /usr/share/graphs1090/git/dump1090.db /usr/share/graphs1090/ && \
+    cp -v /usr/share/graphs1090/git/dump1090.py /usr/share/graphs1090/ && \
+    cp -v /usr/share/graphs1090/git/system_stats.py /usr/share/graphs1090/ && \
+    cp -v /usr/share/graphs1090/git/LICENSE /usr/share/graphs1090/ && \
+    cp -v /usr/share/graphs1090/git/*.sh /usr/share/graphs1090/ && \
+    cp -v /usr/share/graphs1090/git/collectd.conf /etc/collectd/collectd.conf && \
+    cp -v /usr/share/graphs1090/git/nginx-graphs1090.conf /usr/share/graphs1090/ && \
+    chmod -v a+x /usr/share/graphs1090/*.sh && \
+    sed -i -e 's/XFF.*/XFF 0.8/' /etc/collectd/collectd.conf && \
+    sed -i -e 's/skyview978/skyaware978/' /etc/collectd/collectd.conf && \
+    cp -rv /usr/share/graphs1090/git/html /usr/share/graphs1090/ && \
+    sed -i -e "s/__cache_version__/$(date +%s | tail -c5)/g" /usr/share/graphs1090/html/index.html && \
+    mkdir -p /usr/share/graphs1090/data-symlink && \
+    mkdir -p /var/lib/collectd/rrd/localhost/dump1090-localhost && \
+    mkdir -p /data && \
+    ln -s /data /usr/share/graphs1090/data-symlink/data && \
+    mkdir -p /run/graphs1090 && \
+    popd && \
+    # Copy nginx config
+    cp -Rv /etc/nginx.graphs1090/* /etc/nginx/ && \
+    rm -rf /etc/nginx.graphs1090 && \
     # Clean-up.
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \
