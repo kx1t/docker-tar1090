@@ -26,4 +26,10 @@ server {
 
   }
 
+  location /graphs/ {
+      alias /run/graphs1090/;
+  }
+
+  include /usr/share/graphs1090/nginx-graphs1090.conf;
+
 }

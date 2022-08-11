@@ -104,9 +104,6 @@ RUN set -x && \
     ln -s /data /usr/share/graphs1090/data-symlink/data && \
     mkdir -p /run/graphs1090 && \
     popd && \
-    # Copy nginx config
-    cp -Rv /etc/nginx.graphs1090/* /etc/nginx/ && \
-    rm -rf /etc/nginx.graphs1090 && \
     # Clean-up.
     apt-get remove -y ${TEMP_PACKAGES[@]} && \
     apt-get autoremove -y && \
