@@ -76,7 +76,7 @@ RUN set -x && \
     mkdir -p "$GITPATH_TAR1090_AC_DB" && \
     curl "https://raw.githubusercontent.com/wiedehopf/tar1090-db/csv/aircraft.csv.gz" > "$GITPATH_TAR1090_AC_DB/aircraft.csv.gz" && \
     # Deploy graphs1090
-    mkdir -p /etc/collectd
+    mkdir -p /etc/collectd && \
     git clone \
         -b master \
         --depth 1 \
